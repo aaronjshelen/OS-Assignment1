@@ -13,7 +13,7 @@ class Buffer {
 
 //    public int size() {return buffer.length;}
 
-    public synchronized void produce(int index) throws InterruptedException {
+    public void produce(int index) throws InterruptedException {
         while (capacity == buffer.length) { // buffer is full
             System.out.println(Arrays.toString(buffer) + " - Buffer is full, producer waiting...");
             wait();
@@ -29,7 +29,7 @@ class Buffer {
         notify();
     }
 
-    public synchronized void consume(int index) throws InterruptedException {
+    public void consume(int index) throws InterruptedException {
         while (capacity == 0) {
             System.out.println(Arrays.toString(buffer) + " - Buffer is empty, consumer waiting...");
             wait();
@@ -57,7 +57,9 @@ public class Main {
            int index = 0;
            while (true) {
                try {
-                   buffer.produce(index % size);
+                   synchronized (buffer) {
+                       buffer.produce(index % size);
+                   }
                    index++;
                } catch (InterruptedException e) {
                    throw new RuntimeException(e);
@@ -69,7 +71,9 @@ public class Main {
             int index = 0;
             while (true) {
                 try {
-                    buffer.consume(index % size);
+                    synchronized (buffer) {
+                        buffer.consume(index % size);
+                    }
                     index++;
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
