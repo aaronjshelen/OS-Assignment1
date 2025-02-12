@@ -18,7 +18,6 @@ class Buffer {
             System.out.println(Arrays.toString(buffer) + " - Buffer is full, producer waiting...");
             wait();
         }
-        Thread.sleep(500); // simulate writing
         if (buffer[index] == EMPTY) {
             System.out.println(Arrays.toString(buffer) + " - Writing FULL (1) to element " + index);
             buffer[index] = FULL;
@@ -34,7 +33,6 @@ class Buffer {
             System.out.println(Arrays.toString(buffer) + " - Buffer is empty, consumer waiting...");
             wait();
         }
-        Thread.sleep(500); // simulate reading
         if (buffer[index] == FULL) {
             System.out.println(Arrays.toString(buffer) + " - Consuming element " + index);
             buffer[index] = EMPTY;
@@ -58,6 +56,7 @@ public class Main {
            while (true) {
                try {
                    buffer.produce(index++ % size);
+                   Thread.sleep(500); // simulate working
                } catch (InterruptedException e) {
                    throw new RuntimeException(e);
                }
@@ -69,6 +68,7 @@ public class Main {
             while (true) {
                 try {
                     buffer.consume(index++ % size);
+                    Thread.sleep(500); // simulate working
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
