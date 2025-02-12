@@ -14,7 +14,7 @@ const char CD[] = "cd", DIR[] = "dir", TYPE[] = "type", DEL[] = "del",
 
 
 void processInput(char input[MAX_CHAR_LIM]);
-int changeDir(char *directory);
+void changeDir(char *directory);
 void listDirectory(char *arg1, char *arg2); 
 void type_cmd(const char *filename);
 void copy_cmd(const char *filename, const char *dst);
@@ -43,18 +43,11 @@ int main(int argc, char* argv[]) {
 }
 
 // function that changes the directory
-int changeDir(char *directory) {
-
-    if (_chdir(directory) == 0) {
-        printf("Directory changed to: %s\n", directory);
-    } else {
-        printf("The system cannot find the path specified.\n");
-    }
-
-    return 1;
+void changeDir(char *directory) {
+    char command[200] = "cd ";
+    strncat(command, directory, strlen(directory));
+    system(command);
 }
-
-
 
 // Function to implement DIR (ls)
 void listDirectory(char *arg1, char *arg2) {
