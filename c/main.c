@@ -22,34 +22,24 @@ void ren_cmd(const char *filename, const char *newname);
 void del_cmd(const char *filename);
 
 int main(int argc, char* argv[]) {
-
-    bool run = true;
-
-    while (run) {
-        
+    while (true) {
         printf("Type Ctrl+C to exit.\n");
-
         char input[MAX_CHAR_LIM] = "";
         fgets(input, sizeof(input), stdin);
-        input[strlen(input) - 1] = '\0'; // remove newline char
-
+        input[strlen(input) - 1] = '\0';
         processInput(input);
-
-
-        
-
     }
     printf("Exiting");
 }
 
-// function that changes the directory
+// cd directory: changes to a directory
 void changeDir(char *directory) {
     char command[200] = "cd ";
     strncat(command, directory, strlen(directory));
     system(command);
 }
 
-// Function to implement DIR (ls)
+// function to implement DIR (ls)
 void listDirectory(char *arg1, char *arg2) {
     char command[200] = "dir";
     if (arg1 != NULL) {
@@ -82,12 +72,14 @@ void copy_cmd(const char *filename, const char *dst) {
     system(command);
 }
 
+// del (rm) filename: deletes a specified file
 void del_cmd(const char *filename) {
     char command[MAX_CHAR_LIM + 5] = "del ";
     strncat(command, filename, strlen(filename));
     system(command);
 }
 
+// ren (mv) old_filename new_filename: renames a file
 void ren_cmd(const char *filename, const char *newname) {
     char command[MAX_CHAR_LIM + 5] = "ren ";
     strncat(command, filename, strlen(filename));
@@ -101,10 +93,8 @@ void processInput(char input[MAX_CHAR_LIM]) {
     const char delim[] = " ";
     char* token = strtok(input, delim);
     if (token == NULL) {
-        // printf("Error processing input\n");
         return;
     }
-
 
     int num_args = 0;
     int arg_counter = 0;
@@ -117,7 +107,6 @@ void processInput(char input[MAX_CHAR_LIM]) {
     arg1 = token;
     token = strtok(NULL, delim);
     arg2 = token;
-
 
     if (strcmp(command, DIR) == 0) {
         dirActivated = true;
