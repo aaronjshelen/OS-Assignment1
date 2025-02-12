@@ -100,6 +100,7 @@ void ren_cmd(const char *filename, const char *newname) {
     strncat(command, filename, strlen(filename));
     strncat(command, " ", 1);
     strncat(command, newname, strlen(newname));
+    system(command);
 }
 
 void processInput(char input[MAX_CHAR_LIM]) {
@@ -133,9 +134,9 @@ void processInput(char input[MAX_CHAR_LIM]) {
         num_args = 2;
     }
 
-    printf("NUM: %d\n", num_args);
-    printf("ARG1: %s\n", arg1);
-    printf("ARG2: %s\n", arg2);
+    // printf("NUM: %d\n", num_args);
+    // printf("ARG1: %s\n", arg1);
+    // printf("ARG2: %s\n", arg2);
 
     if (dirActivated == false) {
         if (num_args == 0) {
