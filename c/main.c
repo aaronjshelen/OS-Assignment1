@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#include <direct.h>
 
 
 #define MAX_CHAR_LIM 100
@@ -15,7 +14,7 @@ const char CD[] = "cd", DIR[] = "dir", TYPE[] = "type", DEL[] = "del",
 
 void processInput(char input[MAX_CHAR_LIM]);
 void changeDir(char *directory);
-void listDirectory(char *arg1, char *arg2); 
+void listDirectory();
 void type_cmd(const char *filename);
 void copy_cmd(const char *filename, const char *dst);
 void ren_cmd(const char *filename, const char *newname);
@@ -40,16 +39,8 @@ void changeDir(char *directory) {
 }
 
 // function to implement DIR (ls)
-void listDirectory(char *arg1, char *arg2) {
+void listDirectory() {
     char command[200] = "dir";
-    if (arg1 != NULL) {
-        strcat(command, " ");
-        strcat(command, arg1);
-    }
-    if (arg2 != NULL) {
-        strcat(command, " ");
-        strcat(command, arg2);
-    }
     system(command);
 }
 
@@ -101,55 +92,47 @@ void processInput(char input[MAX_CHAR_LIM]) {
     char *command = token;
     char *arg1, *arg2;
 
-    bool dirActivated = false;
 
     token = strtok(NULL, delim);
     arg1 = token;
     token = strtok(NULL, delim);
     arg2 = token;
 
-    if (strcmp(command, DIR) == 0) {
-        dirActivated = true;
-    } else if  (strcmp(command, CD) == 0 || strcmp(command, TYPE) == 0 || strcmp(command, DEL) == 0) {
+    if  (strcmp(command, DIR) == 0 || strcmp(command, CD) == 0 || strcmp(command, TYPE) == 0 || strcmp(command, DEL) == 0) {
         num_args = 1;        
     } else if (strcmp(command, REN) == 0 || strcmp(command, COPY) == 0) {
         num_args = 2;
     }
 
-    // printf("NUM: %d\n", num_args);
-    // printf("ARG1: %s\n", arg1);
-    // printf("ARG2: %s\n", arg2);
 
-    if (dirActivated == false) {
-        if (num_args == 0) {
-            if (arg1 != NULL) {
-                printf("Too many\n");
-                return;
-            }
-        } else if (num_args == 1) {
-            if (arg1 == NULL) {
-                printf("too few\n");
-                return;
-            } else if (arg2 != NULL) {
-                printf("too many\n");
-                return;
-            } 
-        } else { // num_args is 2
-            if (arg1 == NULL || arg2 == NULL) {
-                printf("too few\n");
-                return;
-            } else if (strtok(NULL, delim) != NULL) {
-                printf("too many\n");
-                return;
-            }
+    if (num_args == 0) {
+        if (arg1 != NULL) {
+            printf("Too many\n");
+            return;
+        }
+    } else if (num_args == 1) {
+        if (arg1 == NULL) {
+            printf("too few\n");
+            return;
+        } else if (arg2 != NULL) {
+            printf("too many\n");
+            return;
+        } 
+    } else { // num_args is 2
+        if (arg1 == NULL || arg2 == NULL) {
+            printf("too few\n");
+            return;
+        } else if (strtok(NULL, delim) != NULL) {
+            printf("too many\n");
+            return;
         }
     }
+    
 
     if (strcmp(command, CD) == 0){
         changeDir(arg1);
     } else if (strcmp(command, DIR) == 0) {
         listDirectory(arg1, arg2);
-        dirActivated = false;
     } else if (strcmp(command, TYPE) == 0) {
         type_cmd(arg1);
     } else if (strcmp(command, COPY) == 0) {
