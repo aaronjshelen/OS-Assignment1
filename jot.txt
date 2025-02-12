@@ -1,0 +1,13 @@
+
+To do:
+------
+
+- We all make our respective methods.
+
+- Convert Windows methods -> Linux methods
+
+- Finalize java code
+
+- Get screenshots
+
+- Make document
