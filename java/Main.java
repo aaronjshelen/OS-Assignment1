@@ -18,7 +18,6 @@ class Buffer {
             System.out.println(Arrays.toString(buffer) + " - Buffer is full, producer waiting...");
             wait();
         }
-        Thread.sleep(500); // simulate writing
         if (buffer[index] == EMPTY) {
             System.out.println(Arrays.toString(buffer) + " - Writing FULL (1) to element " + index);
             buffer[index] = FULL;
@@ -26,7 +25,7 @@ class Buffer {
         } else {
             System.out.println(Arrays.toString(buffer) + " - Element " + index + " is FULL, skipping operation");
         }
-        notify();
+        notifyAll();
     }
 
     public synchronized void consume(int index) throws InterruptedException {
@@ -34,7 +33,6 @@ class Buffer {
             System.out.println(Arrays.toString(buffer) + " - Buffer is empty, consumer waiting...");
             wait();
         }
-        Thread.sleep(500); // simulate reading
         if (buffer[index] == FULL) {
             System.out.println(Arrays.toString(buffer) + " - Consuming element " + index);
             buffer[index] = EMPTY;
@@ -42,7 +40,7 @@ class Buffer {
         } else {
             System.out.println(Arrays.toString(buffer) + " - Element " + index + " is EMPTY, skipping operation");
         }
-        notify();
+        notifyAll();
     }
 }
 
@@ -57,8 +55,8 @@ public class Main {
            int index = 0;
            while (true) {
                try {
-                   buffer.produce(index % size);
-                   index++;
+                   buffer.produce(index++ % size);
+                   Thread.sleep(500); // simulate working
                } catch (InterruptedException e) {
                    throw new RuntimeException(e);
                }
@@ -69,8 +67,8 @@ public class Main {
             int index = 0;
             while (true) {
                 try {
-                    buffer.consume(index % size);
-                    index++;
+                    buffer.consume(index++ % size);
+                    Thread.sleep(500); // simulate working
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
