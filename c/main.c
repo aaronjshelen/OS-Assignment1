@@ -16,6 +16,10 @@ const char CD[] = "cd", DIR[] = "dir", TYPE[] = "type", DEL[] = "del",
 void processInput(char input[MAX_CHAR_LIM]);
 int changeDir(char *directory);
 void listDirectory(char *arg1, char *arg2); 
+void type_cmd(const char *filename);
+void copy_cmd(const char *filename, const char *dst);
+void ren_cmd(const char *filename, const char *newname);
+void del_cmd(const char *filename);
 
 int main(int argc, char* argv[]) {
 
@@ -66,6 +70,38 @@ void listDirectory(char *arg1, char *arg2) {
     system(command);
 }
 
+// type (cat) filename: view file contents of filename
+void type_cmd(const char *filename) {
+    char command[MAX_CHAR_LIM + 6] = "type "; // strlen("type ") + 1 = 6
+    strncat(command, filename, strlen(filename));
+    // printf("Command: %s\n", command);
+    system(command);
+    printf("\n");
+}
+
+// copy (cp) filename dest: copies filename to dest (e.g. copy file.txt directory/
+void copy_cmd(const char *filename, const char *dst) {
+    char command[MAX_CHAR_LIM + 6] = "copy "; // strlen("type ") + 1 = 6
+    strncat(command, filename, strlen(filename));
+    strncat(command, " ", 1);
+    strncat(command, dst, strlen(dst));
+    // printf("%s\n", command);
+    system(command);
+}
+
+void del_cmd(const char *filename) {
+    char command[MAX_CHAR_LIM + 5] = "del ";
+    strncat(command, filename, strlen(filename));
+    system(command);
+}
+
+void ren_cmd(const char *filename, const char *newname) {
+    char command[MAX_CHAR_LIM + 5] = "ren ";
+    strncat(command, filename, strlen(filename));
+    strncat(command, " ", 1);
+    strncat(command, newname, strlen(newname));
+}
+
 void processInput(char input[MAX_CHAR_LIM]) {
     
     const char delim[] = " ";
@@ -89,16 +125,17 @@ void processInput(char input[MAX_CHAR_LIM]) {
     arg2 = token;
 
 
-
-    if (strcmp(command, CD) == 0){
-        num_args = 1;
-    } else if (strcmp(command, DIR) == 0) {
+    if (strcmp(command, DIR) == 0) {
         dirActivated = true;
+    } else if  (strcmp(command, CD) == 0 || strcmp(command, TYPE) == 0 || strcmp(command, DEL) == 0) {
+        num_args = 1;        
+    } else if (strcmp(command, REN) == 0 || strcmp(command, COPY) == 0) {
+        num_args = 2;
     }
 
-    // printf("NUM: %d\n", num_args);
-    // printf("ARG1: %s\n", arg1);
-    // printf("ARG2: %s\n", arg2);
+    printf("NUM: %d\n", num_args);
+    printf("ARG1: %s\n", arg1);
+    printf("ARG2: %s\n", arg2);
 
     if (dirActivated == false) {
         if (num_args == 0) {
@@ -129,6 +166,15 @@ void processInput(char input[MAX_CHAR_LIM]) {
         changeDir(arg1);
     } else if (strcmp(command, DIR) == 0) {
         listDirectory(arg1, arg2);
+        dirActivated = false;
+    } else if (strcmp(command, TYPE) == 0) {
+        type_cmd(arg1);
+    } else if (strcmp(command, COPY) == 0) {
+        copy_cmd(arg1, arg2);
+    } else if (strcmp(command, DEL) == 0) {
+        del_cmd(arg1);
+    } else if (strcmp(command, REN) == 0) {
+        ren_cmd(arg1, arg2);
     }
 
 
